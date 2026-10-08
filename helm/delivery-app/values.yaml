@@ -1,0 +1,16 @@
+replicaCount: 2
+
+image:
+  repository: delivery-app
+  tag: v1
+  pullPolicy: IfNotPresent
+
+appVersion: "v1"
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: 200m
+    memory: 128Mi
