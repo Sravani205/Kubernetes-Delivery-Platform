@@ -1,0 +1,14 @@
+pipeline {
+    agent any
+    stages {
+        stage('Check tools') {
+            steps {
+                sh 'docker --version'
+                sh 'kubectl version --client'
+                sh 'helm version'
+                sh 'python3 --version'
+                sh 'ls'
+            }
+        }
+    }
+}
