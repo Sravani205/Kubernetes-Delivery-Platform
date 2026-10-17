@@ -1,13 +1,52 @@
 pipeline {
     agent any
+
+    environment {
+        IMAGE   = 'delivery-app'
+        CLUSTER = 'dev'
+        RELEASE = 'delivery-app'
+    }
+
     stages {
-        stage('Check tools') {
+        stage('Test') {
             steps {
-                sh 'docker --version'
-                sh 'kubectl version --client'
-                sh 'helm version'
-                sh 'python3 --version'
-                sh 'ls'
+                sh '''
+                    cd app
+                    python3 -m venv /tmp/venv
+                    . /tmp/venv/bin/activate
+                    pip install -r requirements.txt pytest
+                    pytest
+                '''
+            }
+        }
+
+        stage('Build image') {
+            steps {
+                sh 'docker build --provenance=false -t ${IMAGE}:${BUILD_NUMBER} app'
+            }
+        }
+
+        stage('Load image into kind') {
+            steps {
+                sh 'kind load docker-image ${IMAGE}:${BUILD_NUMBER} --name ${CLUSTER}'
+            }
+        }
+
+        stage('Deploy with Helm') {
+            steps {
+                sh '''
+                    helm upgrade --install ${RELEASE} helm/delivery-app \
+                      --set image.tag=${BUILD_NUMBER} \
+                      --set appVersion=build-${BUILD_NUMBER} \
+                      --wait --timeout 90s
+                '''
+            }
+        }
+
+        stage('Verify') {
+            steps {
+                sh 'kubectl rollout status deployment/${RELEASE} --timeout=60s'
+                sh 'kubectl get pods -l app=${RELEASE}'
             }
         }
     }
