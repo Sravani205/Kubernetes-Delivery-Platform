@@ -14,4 +14,7 @@ RUN apt-get update \
  && curl -fsSL "https://get.helm.sh/helm-v3.16.2-linux-${ARCH}.tar.gz" | tar -xz -C /tmp \
  && mv "/tmp/linux-${ARCH}/helm" /usr/local/bin/helm \
  && rm -rf /var/lib/apt/lists/* "/tmp/linux-${ARCH}"
+RUN ARCH=$(dpkg --print-architecture) \
+ && curl -fsSLo /usr/local/bin/kind "https://kind.sigs.k8s.io/dl/v0.32.0/kind-linux-${ARCH}" \
+ && chmod +x /usr/local/bin/kind
 USER jenkins
