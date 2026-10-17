@@ -22,7 +22,7 @@ pipeline {
 
         stage('Build image') {
             steps {
-                sh 'docker build --provenance=false -t ${IMAGE}:${BUILD_NUMBER} app'
+                sh 'docker build -t ${IMAGE}:${BUILD_NUMBER} app'
             }
         }
 
