@@ -52,7 +52,7 @@ flowchart LR
 ## Project status
 
 - [x] **Phase 1:** App, Docker image, local cluster with kind
-- [ ] **Phase 2:** Helm chart and local Jenkins pipeline
+- [x] **Phase 2:** Helm chart and local Jenkins pipeline
 - [ ] **Phase 3:** Terraform creates the local cluster and installs components
 - [ ] **Phase 4:** Pipeline deploys to the cluster, Gateway API 80/20 canary, Ansible readiness checks
 - [ ] **Phase 5:** Prometheus, Grafana dashboard, and an alert
